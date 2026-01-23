@@ -35,6 +35,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dms/dashboard', [DashboardController::class, 'dms'])
         ->middleware('role:dms')
         ->name('dashboard.dms');
+    
+    // Admin DMS download
+    Route::get('/dms/download/{nip}/{type}', [DmsController::class, 'adminDownload'])
+        ->middleware('role:dms')
+        ->name('dms.admin.download');
+    
+    // Admin DMS zip download
+    Route::get('/dms/zip/{nip}', [DmsController::class, 'zipDownload'])
+        ->middleware('role:dms')
+        ->name('dms.admin.zip');
 
     // Pegawai dashboard
     Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])

@@ -202,40 +202,53 @@
                             ucwords(str_replace('_', ' ', $field)) }}</th>
                         @endforeach
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Dibuat Pada</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Diupdate Pada</th>
+                            Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($dmsData as $item)
                     <tr class="hover:bg-gray-50 transition-colors duration-150">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ ($loop->iteration + (($dmsData->currentPage() - 1) * $dmsData->perPage())) }}</div>
+                            <div class="text-sm font-medium text-gray-900">{{ ($loop->iteration +
+                                (($dmsData->currentPage() - 1) * $dmsData->perPage())) }}</div>
                         </td>
                         @foreach($attributes as $field => $value)
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
-                                $fieldValue = $item->$field ?? '-';
-                                $textColor = 'text-gray-900';
-                                $fontWeight = 'font-normal';
-                                
-                                if ($fieldValue === 'sudah') {
-                                    $textColor = 'text-green-600 font-semibold';
-                                } elseif ($fieldValue === 'belum') {
-                                    $textColor = 'text-red-600 font-semibold';
-                                }
+                            $fieldValue = $item->$field ?? null;
+                            $isDocument = in_array($field, ['drh', 'sk_cpns', 'd2np', 'spmt', 'sk_pns']);
+
+                            if ($isDocument) {
+                            // For document fields, check if file exists
+                            if (!empty($fieldValue)) {
+                            // File exists - show download button with icon only
+                            echo '<a href="' . route('dms.admin.download', ['nip' => $item->nip, 'type' => $field]) . '"
+                                class="inline-flex items-center justify-center w-8 h-8 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors" title="Download">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                            </a>';
+                            } else {
+                            // No file - show "belum"
+                            echo '<span class="text-sm text-red-600 font-semibold">belum</span>';
+                            }
+                            } else {
+                            // For non-document fields (nip, nama, created_at), show the value
+                            echo '<div class="text-sm text-gray-900">' . ($fieldValue ?? '-') . '</div>';
+                            }
                             @endphp
-                            <div class="text-sm {{ $textColor }}">{{ $fieldValue }}</div>
                         </td>
                         @endforeach
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $item->created_at ? $item->created_at->format('d M Y
-                                H:i') : '-' }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $item->updated_at ? $item->updated_at->format('d M Y
-                                H:i') : '-' }}</div>
+                            <a href="{{ route('dms.admin.zip', ['nip' => $item->nip]) }}"
+                                class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-full hover:bg-indigo-700 transition-colors">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                ZIP & Download
+                            </a>
                         </td>
                     </tr>
                     @endforeach

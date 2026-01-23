@@ -45,31 +45,19 @@ class DashboardController extends Controller
         // Pagination with 20 items per page, preserving search parameters
         $dmsData = $query->paginate(20)->appends(['search' => $request->search]);
 
-        // Calculate statistics for each document type based on actual values
+        // Calculate statistics for each document type based on actual filenames
         $totalData = \App\Models\Dms::count();
+        $documentFields = ['drh', 'sk_cpns', 'd2np', 'spmt', 'sk_pns'];
 
-        $stats = [
-            'drh' => [
-                'uploaded' => \App\Models\Dms::where('drh', 'sudah')->count(),
-                'not_uploaded' => \App\Models\Dms::where('drh', 'belum')->count()
-            ],
-            'sk_cpns' => [
-                'uploaded' => \App\Models\Dms::where('sk_cpns', 'sudah')->count(),
-                'not_uploaded' => \App\Models\Dms::where('sk_cpns', 'belum')->count()
-            ],
-            'd2np' => [
-                'uploaded' => \App\Models\Dms::where('d2np', 'sudah')->count(),
-                'not_uploaded' => \App\Models\Dms::where('d2np', 'belum')->count()
-            ],
-            'spmt' => [
-                'uploaded' => \App\Models\Dms::where('spmt', 'sudah')->count(),
-                'not_uploaded' => \App\Models\Dms::where('spmt', 'belum')->count()
-            ],
-            'sk_pns' => [
-                'uploaded' => \App\Models\Dms::where('sk_pns', 'sudah')->count(),
-                'not_uploaded' => \App\Models\Dms::where('sk_pns', 'belum')->count()
-            ]
-        ];
+        $stats = [];
+        foreach ($documentFields as $field) {
+            $stats[$field] = [
+                'uploaded' => \App\Models\Dms::whereNotNull($field)->where($field, '!=', '')->count(),
+                'not_uploaded' => \App\Models\Dms::where(function($q) use ($field) {
+                    $q->whereNull($field)->orWhere($field, '=', '');
+                })->count()
+            ];
+        }
 
         return view('admin.dms.dashboard', compact('dmsData', 'stats', 'totalData'));
     }

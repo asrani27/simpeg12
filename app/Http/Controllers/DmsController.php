@@ -32,9 +32,10 @@ class DmsController extends Controller
         $userNip = Auth::user()->username;
         $documentType = $request->document_type;
         $file = $request->file('file');
-        $originalName = $file->getClientOriginalName();
-        $fileName = time() . '_' . str_replace(' ', '_', $originalName);
-        $filePath = $file->storeAs('dms/documents', $fileName, 'public');
+
+        // Generate filename: username_documentType.pdf
+        $fileName = $userNip . '_' . $documentType . '.pdf';
+        $filePath = $file->storeAs('dms/' . $userNip, $fileName, 'public');
 
         // Find or create DMS record for this user
         $dms = Dms::firstOrCreate(
@@ -56,22 +57,19 @@ class DmsController extends Controller
     {
         $userNip = Auth::user()->username;
         $dms = Dms::where('nip', $userNip)->firstOrFail();
-        
+
         if (!$dms->$type) {
             return redirect()->back()->with('error', 'Dokumen tidak ditemukan.');
         }
 
         $fileName = $dms->$type;
-        $filePath = "dms/documents/{$fileName}";
-        
+        $filePath = "dms/{$userNip}/{$fileName}";
+
         if (!Storage::disk('public')->exists($filePath)) {
             return redirect()->back()->with('error', 'File tidak ditemukan di storage.');
         }
 
-        // Extract original name from filename (remove timestamp prefix)
-        $originalName = preg_replace('/^\d+_/', '', $fileName);
-
-        return Storage::disk('public')->download($filePath, $originalName);
+        return Storage::disk('public')->download($filePath, $fileName);
     }
 
     /**
@@ -87,7 +85,7 @@ class DmsController extends Controller
         }
 
         // Delete file from storage
-        $filePath = "dms/documents/{$dms->$type}";
+        $filePath = "dms/{$userNip}/{$dms->$type}";
         if (Storage::disk('public')->exists($filePath)) {
             Storage::disk('public')->delete($filePath);
         }
@@ -97,5 +95,79 @@ class DmsController extends Controller
         $dms->save();
 
         return redirect()->back()->with('success', 'Dokumen berhasil dihapus!');
+    }
+
+    /**
+     * Download file as admin (for any user's document)
+     */
+    public function adminDownload($nip, $type)
+    {
+        $dms = Dms::where('nip', $nip)->firstOrFail();
+
+        if (!$dms->$type) {
+            return redirect()->back()->with('error', 'Dokumen tidak ditemukan.');
+        }
+
+        $fileName = $dms->$type;
+        $filePath = "dms/{$nip}/{$fileName}";
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan di storage.');
+        }
+
+        return Storage::disk('public')->download($filePath, $fileName);
+    }
+
+    /**
+     * Zip and download all documents for a user
+     */
+    public function zipDownload($nip)
+    {
+        $dms = Dms::where('nip', $nip)->firstOrFail();
+
+        // Get the user's folder path from storage
+        $folderPath = Storage::disk('public')->path('dms/' . $nip);
+        
+        if (!file_exists($folderPath) || count(scandir($folderPath)) <= 2) {
+            return redirect()->back()->with('error', 'Tidak ada dokumen untuk diunduh.');
+        }
+
+        // Create zip file name and path in temporary storage
+        $zipFileName = $nip . '.zip';
+        $zipFilePath = storage_path('app/temp/' . $zipFileName);
+
+        // Ensure temp directory exists
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        // Create zip archive
+        $zip = new \ZipArchive();
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== TRUE) {
+            return redirect()->back()->with('error', 'Gagal membuat file ZIP.');
+        }
+
+        // Add all files from the folder to the zip
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folderPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($folderPath) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+
+        $zip->close();
+
+        // Download the zip file
+        if (file_exists($zipFilePath)) {
+            return response()->download($zipFilePath, $zipFileName)->deleteFileAfterSend(true);
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengunduh file ZIP.');
     }
 }
