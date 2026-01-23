@@ -12,6 +12,20 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $guarded = ['id'];
+
+    /**
+     * Override the default authentication method to use username
+     */
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +34,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
+        'admin_layanan',
+        'profile_photo',
     ];
 
     /**
@@ -43,6 +60,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'admin_layanan' => 'boolean',
         ];
+    }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_users');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
     }
 }
