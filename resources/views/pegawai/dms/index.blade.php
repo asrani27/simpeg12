@@ -22,7 +22,7 @@
                     </svg>
                     Daftar Dokumen
                 </h2>
-                <span class="text-sm text-blue-100">Format: PDF (Maksimal 2MB)</span>
+                <span class="text-sm text-blue-100">Format: PDF (Maksimal 1.5MB)</span>
             </div>
         </div>
         <div class="overflow-x-auto">

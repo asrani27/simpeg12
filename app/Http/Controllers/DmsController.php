@@ -26,7 +26,7 @@ class DmsController extends Controller
     {
         $request->validate([
             'document_type' => 'required|in:drh,sk_cpns,d2np,spmt,sk_pns',
-            'file' => 'required|file|mimes:pdf|max:2048', // Max 2MB, PDF only
+            'file' => 'required|file|mimes:pdf|max:1536', // Max 1.5MB, PDF only
         ]);
 
         $userNip = Auth::user()->username;
@@ -127,7 +127,7 @@ class DmsController extends Controller
 
         // Get the user's folder path from storage
         $folderPath = Storage::disk('public')->path('dms/' . $nip);
-        
+
         if (!file_exists($folderPath) || count(scandir($folderPath)) <= 2) {
             return redirect()->back()->with('error', 'Tidak ada dokumen untuk diunduh.');
         }

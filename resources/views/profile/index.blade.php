@@ -1,144 +1,282 @@
 @extends('layouts.app')
 
-@section('title', 'Profil')
+@section('title', 'Profil Pengguna')
 
 @section('header_title', 'Profil')
 
-@section('styles')
-<style>
-    .profile-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        overflow: hidden;
-    }
-    .profile-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 40px 20px;
-        text-align: center;
-        color: white;
-    }
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 4px solid white;
-        margin: 0 auto 15px;
-        object-fit: cover;
-        background: white;
-    }
-    .form-section {
-        padding: 30px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    .form-section:last-child {
-        border-bottom: none;
-    }
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-    }
-    .section-title svg {
-        width: 24px;
-        height: 24px;
-        margin-right: 10px;
-        color: #6b7280;
-    }
-</style>
-@endsection
-
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <div class="profile-card">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <img src="{{ auth()->user()->profile_photo ? asset('storage/profile_photos/' . auth()->user()->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=8b5cf6&color=fff&size=200' }}" 
-                 alt="Profile" 
-                 class="profile-avatar">
-            <h1 class="text-2xl font-bold">{{ auth()->user()->name }}</h1>
-            <p class="text-white/80 mt-1">{{ auth()->user()->email }}</p>
-        </div>
+    <!-- Profile Information Card -->
+    <div class="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 mb-6">
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi Profil</h3>
 
-        <!-- Change Profile Photo -->
-        <div class="form-section">
-            <h2 class="section-title">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                Ganti Foto Profil
-            </h2>
-            <form action="{{ route('profile.updatePhoto') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-start space-x-6">
+                <!-- Profile Photo -->
+                <div class="flex-shrink-0">
+                    @if(auth()->user()->profile_photo)
+                    <img src="{{ asset('storage/profile_photos/' . auth()->user()->profile_photo) }}"
+                        alt="Profile Photo"
+                        class="w-32 h-32 rounded-full object-cover border-4 border-purple-200 shadow-md">
+                    @else
+                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&background=8b5cf6&color=fff&size=200"
+                        alt="Profile Photo" class="w-32 h-32 rounded-full border-4 border-purple-200 shadow-md">
+                    @endif
+
+                    <!-- Upload Photo Form -->
+                    <form action="{{ route('profile.updatePhoto') }}" method="POST" enctype="multipart/form-data"
+                        class="mt-3">
+                        @csrf
+                        <div class="flex items-center space-x-2">
+                            <label
+                                class="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-2 rounded-lg transition-colors">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                Ganti Foto
+                                <input type="file" name="profile_photo" accept="image/*" class="hidden"
+                                    onchange="this.form.submit()">
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- User Details -->
+                <div class="flex-1 space-y-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto Baru</label>
-                        <input type="file" name="profile_photo" id="profile_photo" accept="image/*" 
-                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-                        @error('profile_photo')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-2 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal: 2MB</p>
+                        <label class="text-sm font-medium text-gray-500">Nama Lengkap</label>
+                        <p class="text-lg text-gray-800">{{ auth()->user()->name }}</p>
                     </div>
-                    <div class="flex items-end">
-                        <button type="submit" 
-                                class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors">
-                            Upload Foto
-                        </button>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Email</label>
+                        <p class="text-gray-800">{{ auth()->user()->email }}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Role</label>
+                        <div class="flex space-x-2 mt-1">
+                            @foreach(auth()->user()->roles as $role)
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                {{ ucfirst($role->name) }}
+                            </span>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-500">Dibuat pada</label>
+                        <p class="text-gray-800">{{ auth()->user()->created_at->format('d F Y') }}</p>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Change Password -->
-        <div class="form-section">
-            <h2 class="section-title">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-                Ganti Password
-            </h2>
-            <form action="{{ route('profile.updatePassword') }}" method="POST">
+    <!-- Password Change Card -->
+    <div class="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg border border-white/20">
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Ganti Password</h3>
+
+            @if($errors->any())
+            <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="font-medium text-red-800 mb-2">Terjadi kesalahan:</p>
+                        <ul class="space-y-1 text-sm text-red-700">
+                            @foreach($errors->all() as $error)
+                            <li>• {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-400 hover:text-red-600 ml-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            @endif
+
+            <form action="{{ route('profile.updatePassword') }}" method="POST" class="space-y-6">
                 @csrf
-                <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Password Saat Ini</label>
-                        <input type="password" name="current_password" id="current_password" required
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
-                        @error('current_password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
-                            <input type="password" name="password" id="password" required
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
-                            @error('password')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" required
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
-                            @error('password_confirmation')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" 
-                                class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors">
-                            Update Password
+
+                <!-- Current Password -->
+                <div>
+                    <label for="current_password" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                </path>
+                            </svg>
+                            Password Saat Ini
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="current_password" name="current_password"
+                            class="w-full pl-4 pr-10 py-3 @error('current_password') border-red-500 bg-red-50 @enderror bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                            placeholder="••••••••" required
+                            value="{{ old('current_password') }}">
+                        <button type="button" onclick="togglePassword('current_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:text-purple-600 transition-colors">
+                            <svg id="current_password-eye" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                </path>
+                            </svg>
+                            <svg id="current_password-eye-off" class="h-5 w-5 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                </path>
+                            </svg>
                         </button>
                     </div>
+                    @error('current_password')
+                    <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                    @enderror
+                </div>
+
+                <!-- New Password -->
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                </path>
+                            </svg>
+                            Password Baru
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password"
+                            class="w-full pl-4 pr-10 py-3 @error('password') border-red-500 bg-red-50 @enderror bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                            placeholder="••••••••" required
+                            value="{{ old('password') }}">
+                        <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:text-purple-600 transition-colors">
+                            <svg id="password-eye" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                </path>
+                            </svg>
+                            <svg id="password-eye-off" class="h-5 w-5 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    @error('password')
+                    <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                    @enderror
+                    <p class="mt-1 text-xs text-gray-500">Password minimal 8 karakter</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                            Konfirmasi Password Baru
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="w-full pl-4 pr-10 py-3 @error('password_confirmation') border-red-500 bg-red-50 @enderror bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                            placeholder="••••••••" required
+                            value="{{ old('password_confirmation') }}">
+                        <button type="button" onclick="togglePassword('password_confirmation')" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:text-purple-600 transition-colors">
+                            <svg id="password_confirmation-eye" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                </path>
+                            </svg>
+                            <svg id="password_confirmation-eye-off" class="h-5 w-5 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    @error('password_confirmation')
+                    <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end pt-2">
+                    <button type="submit"
+                        class="group relative inline-flex items-center justify-center px-8 py-3 text-sm font-semibold text-white transition-all duration-200 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        <svg class="w-5 h-5 mr-2 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Simpan Password
+                        <div class="absolute inset-0 rounded-xl ring-2 ring-white ring-offset-2 ring-offset-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordInput = document.getElementById(fieldId);
+    const eyeIcon = document.getElementById(fieldId + '-eye');
+    const eyeOffIcon = document.getElementById(fieldId + '-eye-off');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.add('hidden');
+        eyeOffIcon.classList.remove('hidden');
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('hidden');
+        eyeOffIcon.classList.add('hidden');
+    }
+}
+</script>
+
 @endsection

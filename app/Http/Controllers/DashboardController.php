@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Layanan;
+use App\Models\Pengajuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -53,7 +56,7 @@ class DashboardController extends Controller
         foreach ($documentFields as $field) {
             $stats[$field] = [
                 'uploaded' => \App\Models\Dms::whereNotNull($field)->where($field, '!=', '')->count(),
-                'not_uploaded' => \App\Models\Dms::where(function($q) use ($field) {
+                'not_uploaded' => \App\Models\Dms::where(function ($q) use ($field) {
                     $q->whereNull($field)->orWhere($field, '=', '');
                 })->count()
             ];
@@ -110,6 +113,41 @@ class DashboardController extends Controller
             $hasWarnings = true;
         }
 
-        return view('pegawai.dashboard', compact('layananList', 'hasWarnings', 'incompleteDocuments', 'dmsData'));
+
+        $pegawai = Auth::user()->pegawai;
+        $layanan = Layanan::get();
+        $pengajuan = Pengajuan::where('pegawai_id', $pegawai->id)->get();
+
+        return view('pegawai.dashboard', compact('layananList', 'hasWarnings', 'incompleteDocuments', 'dmsData', 'pegawai', 'layanan', 'pengajuan'));
+    }
+
+    /**
+     * Display the kepangkatan dashboard.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function kepangkatan()
+    {
+        //Sub Bidang Kepangkatan
+        $pangkat = Pengajuan::where('jenis', 'kepangkatan')->where('status', 1)->whereNull('verifikator')->count();
+        $diproses = Pengajuan::where('jenis', 'kepangkatan')->where('status', 1)->whereNotNull('verifikator')->count();
+        $selesai = Pengajuan::where('jenis', 'kepangkatan')->where('status', 2)->count();
+
+        // Get data with pagination - eager load pegawai relationship and uploads
+        $query = Pengajuan::with(['pegawai', 'upload', 'nama_verifikator'])
+            ->where('jenis', 'kepangkatan')
+            ->where(function ($q) {
+                $q->where('status', '1')
+                    ->orWhere('status', '0');
+            });
+
+        // Get all records to sort them properly by gol_pangkat
+        $data = $query->get()->map(function ($item) {
+            $item->gol_pangkat = $item->pegawai->gol_pangkat ?? '';
+            return $item;
+        })->sortBy(function ($item) {
+            return sortValue($item->gol_pangkat);
+        })->values();
+        return view('kepangkatan.dashboard', compact('pangkat', 'diproses', 'selesai', 'data'));
     }
 }

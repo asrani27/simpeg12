@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -22,15 +23,34 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
+
+        // Validate input
         $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'current_password' => 'required',
+            'password' => 'required|confirmed|min:8',
+        ], [
+            'current_password.required' => 'Password saat ini wajib diisi',
+            'password.required' => 'Password baru wajib diisi',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
+            'password.min' => 'Password minimal 8 karakter',
         ]);
 
         $user = $request->user();
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
+
+        // Verify current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Password saat ini salah.'
+            ])->withInput();
+        }
+
+        // Update password using direct database query to avoid model cast issues
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'password' => Hash::make($request->password),
+                'updated_at' => now(),
+            ]);
 
         return back()->with('success', 'Password berhasil diubah!');
     }

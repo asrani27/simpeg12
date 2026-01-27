@@ -17,7 +17,10 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->hasRole($role)) {
+        // Split roles by pipe character if multiple roles are provided
+        $roles = explode('|', $role);
+        
+        if (!$user || !$user->hasAnyRole($roles)) {
             abort(403, 'Unauthorized');
         }
 
