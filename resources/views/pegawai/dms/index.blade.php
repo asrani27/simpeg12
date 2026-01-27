@@ -54,7 +54,11 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($dmsRecord && $dmsRecord->drh)
+                            @if($dmsRecord && $dmsRecord->drh == "sudah")
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
+                            @elseif($dmsRecord && $dmsRecord->drh)
                             <span
                                 class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
@@ -71,7 +75,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                @if($dmsRecord && $dmsRecord->drh)
+                                @if($dmsRecord && $dmsRecord->drh == "sudah")
+                                <span class="text-sm text-gray-500 italic">Dokumen dari SIASN</span>
+                                @elseif($dmsRecord && $dmsRecord->drh)
                                 <a href="{{ route('pegawai.dms.download', 'drh') }}"
                                     class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 rounded transition-colors">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,12 +136,12 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($dmsRecord && $dmsRecord->sk_cpns)
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            @if($dmsRecord && $dmsRecord->sk_cpns == "sudah")
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            @elseif($dmsRecord && $dmsRecord->sk_cpns)
+                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -147,7 +153,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                @if($dmsRecord && $dmsRecord->sk_cpns)
+                                @if($dmsRecord && $dmsRecord->sk_cpns == "sudah")
+                                <span class="text-sm text-gray-500 italic">Dokumen dari SIASN</span>
+                                @elseif($dmsRecord && $dmsRecord->sk_cpns)
                                 <a href="{{ route('pegawai.dms.download', 'sk_cpns') }}"
                                     class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded transition-colors">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,12 +215,12 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($dmsRecord && $dmsRecord->d2np)
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            @if($dmsRecord && $dmsRecord->d2np == "sudah")
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            @elseif($dmsRecord && $dmsRecord->d2np)
+                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -224,7 +232,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                @if($dmsRecord && $dmsRecord->d2np)
+                                @if($dmsRecord && $dmsRecord->d2np == "sudah")
+                                <span class="text-sm text-gray-500 italic">Dokumen dari SIASN</span>
+                                @elseif($dmsRecord && $dmsRecord->d2np)
                                 <a href="{{ route('pegawai.dms.download', 'd2np') }}"
                                     class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-100 hover:bg-purple-200 rounded transition-colors">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,12 +293,12 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($dmsRecord && $dmsRecord->spmt)
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            @if($dmsRecord && $dmsRecord->spmt == "sudah")
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            @elseif($dmsRecord && $dmsRecord->spmt)
+                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -300,7 +310,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                @if($dmsRecord && $dmsRecord->spmt)
+                                @if($dmsRecord && $dmsRecord->spmt == "sudah")
+                                <span class="text-sm text-gray-500 italic">Dokumen dari SIASN</span>
+                                @elseif($dmsRecord && $dmsRecord->spmt)
                                 <a href="{{ route('pegawai.dms.download', 'spmt') }}"
                                     class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-100 hover:bg-orange-200 rounded transition-colors">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -359,12 +371,12 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($dmsRecord && $dmsRecord->sk_pns)
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            @if($dmsRecord && $dmsRecord->sk_pns == "sudah")
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            @elseif($dmsRecord && $dmsRecord->sk_pns)
+                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span
-                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -376,7 +388,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                @if($dmsRecord && $dmsRecord->sk_pns)
+                                @if($dmsRecord && $dmsRecord->sk_pns == "sudah")
+                                <span class="text-sm text-gray-500 italic">Dokumen dari SIASN</span>
+                                @elseif($dmsRecord && $dmsRecord->sk_pns)
                                 <a href="{{ route('pegawai.dms.download', 'sk_pns') }}"
                                     class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 hover:bg-red-200 rounded transition-colors">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
