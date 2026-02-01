@@ -7,6 +7,8 @@ use App\Models\Skpd;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PegawaiController extends Controller
 {
@@ -108,19 +110,121 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Show the form for editing the specified pegawai.
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
+     * Display DMS for a specific pegawai (SKPD)
      */
-    public function edit($id)
+    public function skpdDmsShow($id)
     {
         $pegawai = Pegawai::findOrFail($id);
-        $skpds = Skpd::where('is_aktif', 1)->get();
-        $statuses = ['PNS', 'CPNS', 'PPPK PENUH WAKTU', 'PPPK PARUH WAKTU'];
-        $jabatans = ['Eselon I', 'Eselon II', 'Eselon III', 'Eselon IV', 'Fungsional', 'Staf'];
 
-        return view('superadmin.pegawai.edit', compact('pegawai', 'skpds', 'statuses', 'jabatans'));
+        // Ensure SKPD can only view their own employees
+        $skpdUser = Auth::user()->skpd;
+        if ($pegawai->kode_skpd !== $skpdUser->kode_skpd) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        $dmsRecord = \App\Models\Dms::where('nip', $pegawai->nip)->first();
+
+        return view('skpd.pegawai.dms', compact('pegawai', 'dmsRecord'));
+    }
+
+    /**
+     * Store a newly uploaded file for pegawai (SKPD)
+     */
+    public function skpdDmsStore(Request $request, $id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Ensure SKPD can only manage their own employees
+        $skpdUser = Auth::user()->skpd;
+        if ($pegawai->kode_skpd !== $skpdUser->kode_skpd) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        $request->validate([
+            'document_type' => 'required|in:drh,sk_cpns,d2np,spmt,sk_pns',
+            'file' => 'required|file|mimes:pdf|max:1536', // Max 1.5MB, PDF only
+        ]);
+
+        $pegawaiNip = $pegawai->nip;
+        $documentType = $request->document_type;
+        $file = $request->file('file');
+
+        // Generate filename: nip_documentType.pdf
+        $fileName = $pegawaiNip . '_' . $documentType . '.pdf';
+        $filePath = $file->storeAs('dms/' . $pegawaiNip, $fileName, 'public');
+
+        // Find or create DMS record for this pegawai
+        $dms = \App\Models\Dms::firstOrCreate(
+            ['nip' => $pegawaiNip],
+            ['nama' => $pegawai->nama]
+        );
+
+        // Update specific document field
+        $dms->$documentType = $fileName;
+        $dms->save();
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diunggah!');
+    }
+
+    /**
+     * Download specified file for pegawai (SKPD)
+     */
+    public function skpdDmsDownload($id, $type)
+    {
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Ensure SKPD can only download their own employees' documents
+        $skpdUser = Auth::user()->skpd;
+        if ($pegawai->kode_skpd !== $skpdUser->kode_skpd) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        $dms = \App\Models\Dms::where('nip', $pegawai->nip)->firstOrFail();
+
+        if (!$dms->$type) {
+            return redirect()->back()->with('error', 'Dokumen tidak ditemukan.');
+        }
+
+        $fileName = $dms->$type;
+        $filePath = "dms/{$pegawai->nip}/{$fileName}";
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan di storage.');
+        }
+
+        return Storage::disk('public')->download($filePath, $fileName);
+    }
+
+    /**
+     * Remove specified file for pegawai (SKPD)
+     */
+    public function skpdDmsDestroy($id, $type)
+    {
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Ensure SKPD can only delete their own employees' documents
+        $skpdUser = Auth::user()->skpd;
+        if ($pegawai->kode_skpd !== $skpdUser->kode_skpd) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        $dms = \App\Models\Dms::where('nip', $pegawai->nip)->firstOrFail();
+
+        if (!$dms->$type) {
+            return redirect()->back()->with('error', 'Dokumen tidak ditemukan.');
+        }
+
+        // Delete file from storage
+        $filePath = "dms/{$pegawai->nip}/{$dms->$type}";
+        if (Storage::disk('public')->exists($filePath)) {
+            Storage::disk('public')->delete($filePath);
+        }
+
+        // Clear field
+        $dms->$type = null;
+        $dms->save();
+
+        return redirect()->back()->with('success', 'Dokumen berhasil dihapus!');
     }
 
     /**
@@ -176,6 +280,41 @@ class PegawaiController extends Controller
             ->route('superadmin.pegawai.index')
             ->with('success', 'Data pegawai berhasil dihapus');
     }
+
+    /**
+     * Display listing of pegawai for SKPD.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function skpdIndex(Request $request)
+    {
+        $user = Auth::user();
+        $kodeSkpd = $user->skpd->kode_skpd;
+
+        $query = Pegawai::where('kode_skpd', $kodeSkpd);
+
+        // Search by nama, NIK, atau NIP
+        if ($request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status pegawai
+        if ($request->status) {
+            $query->where('status_pegawai', $request->status);
+        }
+
+        $pegawais = $query->latest()->paginate(10)->withQueryString();
+        $statuses = ['PNS', 'CPNS', 'PPPK PENUH WAKTU', 'PPPK PARUH WAKTU'];
+
+        return view('skpd.pegawai.index', compact('pegawais', 'statuses'));
+    }
+
 
     /**
      * Import pegawai from Excel file.

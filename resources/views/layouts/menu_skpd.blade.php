@@ -11,4 +11,15 @@
         </svg>
         <span class="text-sm">Dashboard</span>
     </a>
+
+    <!-- Data Pegawai -->
+    <a href="{{ route('skpd.pegawai.index') }}"
+        class="flex items-center px-3 py-2 {{ request()->routeIs('skpd.pegawai*') ? 'text-white bg-white/20 backdrop-blur-sm rounded-md border border-white/30' : 'text-white/80 hover:bg-white/10 hover:text-white' }} rounded-md transition-all duration-300 border {{ request()->routeIs('skpd.pegawai*') ? 'border-white/30' : 'border-transparent hover:border-white/20' }}">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+            </path>
+        </svg>
+        <span class="text-sm">Data Pegawai</span>
+    </a>
 </nav>

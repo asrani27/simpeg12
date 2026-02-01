@@ -54,6 +54,20 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:skpd')
         ->name('dashboard.skpd');
 
+    // SKPD Pegawai routes
+    Route::middleware('role:skpd')
+        ->prefix('/skpd/pegawai')
+        ->name('skpd.pegawai.')
+        ->group(function () {
+            Route::get('/', [PegawaiController::class, 'skpdIndex'])->name('index');
+            Route::get('/{id}', [PegawaiController::class, 'skpdShow'])->name('show');
+            // DMS routes for SKPD pegawai
+            Route::get('/{id}/dms', [PegawaiController::class, 'skpdDmsShow'])->name('dms');
+            Route::post('/{id}/dms', [PegawaiController::class, 'skpdDmsStore'])->name('dms.store');
+            Route::get('/{id}/dms/download/{type}', [PegawaiController::class, 'skpdDmsDownload'])->name('dms.download');
+            Route::delete('/{id}/dms/{type}', [PegawaiController::class, 'skpdDmsDestroy'])->name('dms.destroy');
+        });
+
     // Superadmin dashboard
     Route::get('/superadmin/dashboard', [DashboardController::class, 'superadmin'])
         ->middleware('role:superadmin')
