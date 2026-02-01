@@ -48,6 +48,37 @@ Route::group(['middleware' => ['auth', 'role:kepangkatan']], function () {
     });
 });
 
+Route::group(['middleware' => ['auth', 'role:pensiun']], function () {
+    Route::prefix('pensiun')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'pensiun'])->name('dashboard.pensiun');
+        Route::get('baru', [KepangkatanController::class, 'baru']);
+        Route::get('diproses', [KepangkatanController::class, 'diproses']);
+        Route::get('selesai', [KepangkatanController::class, 'selesai']);
+
+        Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [KepangkatanController::class, 'verif_dokumen']);
+        Route::post('dokumen/{id}/perbaikidokumen', [KepangkatanController::class, 'perbaiki_dokumen']);
+        Route::get('dokumen/{id}', [KepangkatanController::class, 'dokumen_pengajuan']);
+        Route::get('selesaipengajuan/{id}', [KepangkatanController::class, 'selesai_pengajuan']);
+        Route::get('deletepengajuan/{id}', [KepangkatanController::class, 'delete_pengajuan']);
+        Route::get('prosespengajuan/{id}', [KepangkatanController::class, 'proses_pengajuan']);
+
+        Route::get('persyaratan', [KepangkatanController::class, 'persyaratan']);
+        Route::post('persyaratan/create', [KepangkatanController::class, 'persyaratan_store']);
+        Route::post('persyaratan/edit', [KepangkatanController::class, 'persyaratan_update']);
+        Route::get('persyaratan/delete/{id}', [KepangkatanController::class, 'persyaratan_delete']);
+
+        Route::get('jenis_kenaikan', [KepangkatanController::class, 'jenis_kenaikan']);
+        Route::post('jenis_kenaikan/create', [KepangkatanController::class, 'jenis_kenaikan_store']);
+        Route::post('jenis_kenaikan/edit', [KepangkatanController::class, 'jenis_kenaikan_update']);
+        Route::get('jenis_kenaikan/delete/{id}', [KepangkatanController::class, 'jenis_kenaikan_delete']);
+
+        Route::get('pangkat', [KepangkatanController::class, 'k_index']);
+        Route::post('pangkat/ditolak', [KepangkatanController::class, 'k_tolak']);
+        Route::get('pangkat/{id}/dokumen', [KepangkatanController::class, 'k_dokumen']);
+        Route::get('pangkat/{id}/zip', [KepangkatanController::class, 'downloadZip']);
+    });
+});
+
 Route::middleware(['auth'])->group(function () {
     // SKPD dashboard
     Route::get('/skpd/dashboard', [DashboardController::class, 'skpd'])

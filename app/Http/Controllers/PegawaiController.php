@@ -110,6 +110,22 @@ class PegawaiController extends Controller
     }
 
     /**
+     * Show the form for editing the specified pegawai.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function edit($id)
+    {
+        $pegawai = Pegawai::with('skpd')->findOrFail($id);
+        $skpds = Skpd::where('is_aktif', 1)->get();
+        $statuses = ['PNS', 'CPNS', 'PPPK PENUH WAKTU', 'PPPK PARUH WAKTU'];
+        $jabatans = ['Eselon I', 'Eselon II', 'Eselon III', 'Eselon IV', 'Fungsional', 'Staf'];
+
+        return view('superadmin.pegawai.edit', compact('pegawai', 'skpds', 'statuses', 'jabatans'));
+    }
+
+    /**
      * Display DMS for a specific pegawai (SKPD)
      */
     public function skpdDmsShow($id)

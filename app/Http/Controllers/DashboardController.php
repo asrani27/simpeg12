@@ -18,7 +18,59 @@ class DashboardController extends Controller
      */
     public function superadmin()
     {
-        return view('superadmin.dashboard');
+        // Statistics data
+        $totalPegawai = Pegawai::count();
+        $totalSkpd = Skpd::where('is_aktif', 1)->count();
+        $totalPengajuan = Pengajuan::count();
+        $totalUsers = \App\Models\User::count();
+
+        // Pegawai by status
+        $pegawaiPNS = Pegawai::where('status_pegawai', 'PNS')->count();
+        $pegawaiCPNS = Pegawai::where('status_pegawai', 'CPNS')->count();
+        $pegawaiPPPK = Pegawai::where('status_pegawai', 'like', 'PPPK%')->count();
+
+        // Pengajuan by status
+        $pengajuanMenunggu = Pengajuan::where('status', 'menunggu')->count();
+        $pengajuanDiproses = Pengajuan::where('status', 'diproses')->count();
+        $pengajuanSelesai = Pengajuan::where('status', 'selesai')->count();
+
+        // Recent activities - get latest pegawai additions
+        $recentPegawai = Pegawai::with('skpd')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Recent pengajuan
+        $recentPengajuan = Pengajuan::with(['pegawai', 'layanan'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        // DMS statistics
+        $totalDMS = \App\Models\Dms::count();
+        $dmsComplete = \App\Models\Dms::whereNotNull('drh')
+            ->whereNotNull('sk_cpns')
+            ->whereNotNull('d2np')
+            ->whereNotNull('spmt')
+            ->whereNotNull('sk_pns')
+            ->count();
+
+        return view('superadmin.dashboard', compact(
+            'totalPegawai',
+            'totalSkpd',
+            'totalPengajuan',
+            'totalUsers',
+            'pegawaiPNS',
+            'pegawaiCPNS',
+            'pegawaiPPPK',
+            'pengajuanMenunggu',
+            'pengajuanDiproses',
+            'pengajuanSelesai',
+            'recentPegawai',
+            'recentPengajuan',
+            'totalDMS',
+            'dmsComplete'
+        ));
     }
 
     /**
@@ -194,5 +246,35 @@ class DashboardController extends Controller
             return sortValue($item->gol_pangkat);
         })->values();
         return view('kepangkatan.dashboard', compact('pangkat', 'diproses', 'selesai', 'data'));
+    }
+
+    /**
+     * Display the pensiun dashboard.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function pensiun()
+    {
+        //Sub Bidang Pensiun
+        $pensiun = Pengajuan::where('jenis', 'pensiun')->where('status', 1)->whereNull('verifikator')->count();
+        $diproses = Pengajuan::where('jenis', 'pensiun')->where('status', 1)->whereNotNull('verifikator')->count();
+        $selesai = Pengajuan::where('jenis', 'pensiun')->where('status', 2)->count();
+
+        // Get data with pagination - eager load pegawai relationship and uploads
+        $query = Pengajuan::with(['pegawai', 'upload', 'nama_verifikator'])
+            ->where('jenis', 'pensiun')
+            ->where(function ($q) {
+                $q->where('status', '1')
+                    ->orWhere('status', '0');
+            });
+
+        // Get all records to sort them properly by gol_pangkat
+        $data = $query->get()->map(function ($item) {
+            $item->gol_pangkat = $item->pegawai->gol_pangkat ?? '';
+            return $item;
+        })->sortBy(function ($item) {
+            return sortValue($item->gol_pangkat);
+        })->values();
+        return view('pensiun.dashboard', compact('pensiun', 'diproses', 'selesai', 'data'));
     }
 }
