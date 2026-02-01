@@ -10,7 +10,8 @@
             <a href="{{ route('skpd.pegawai.index') }}"
                 class="text-gray-600 hover:text-gray-900 transition-colors duration-150">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18">
                     </path>
                 </svg>
             </a>
@@ -67,7 +68,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->drh == "sudah")
                             <span
-                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->drh)
                             <span
                                 class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
@@ -96,7 +98,8 @@
                                     </svg>
                                     Download
                                 </a>
-                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'drh']) }}" method="POST" class="inline"
+                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'drh']) }}"
+                                    method="POST" class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -147,11 +150,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->sk_cpns == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->sk_cpns)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -174,8 +181,8 @@
                                     </svg>
                                     Download
                                 </a>
-                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'sk_cpns']) }}" method="POST"
-                                    class="inline"
+                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'sk_cpns']) }}"
+                                    method="POST" class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -226,11 +233,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->d2np == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->d2np)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -253,7 +264,8 @@
                                     </svg>
                                     Download
                                 </a>
-                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'd2np']) }}" method="POST" class="inline"
+                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'd2np']) }}"
+                                    method="POST" class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -304,11 +316,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->spmt == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->spmt)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -331,7 +347,8 @@
                                     </svg>
                                     Download
                                 </a>
-                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'spmt']) }}" method="POST" class="inline"
+                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'spmt']) }}"
+                                    method="POST" class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
                                     @csrf
                                     @method('DELETE')
@@ -382,11 +399,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->sk_pns == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->sk_pns)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -409,7 +430,8 @@
                                     </svg>
                                     Download
                                 </a>
-                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'sk_pns']) }}" method="POST" class="inline"
+                                <form action="{{ route('skpd.pegawai.dms.destroy', [$pegawai->id, 'sk_pns']) }}"
+                                    method="POST" class="inline"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?');">
                                     @csrf
                                     @method('DELETE')
