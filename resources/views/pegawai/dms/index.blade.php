@@ -137,11 +137,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->sk_cpns == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->sk_cpns)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -202,7 +206,7 @@
                     </tr>
 
                     <!-- D2NP -->
-                    <tr>
+                    {{-- <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor"
@@ -216,11 +220,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->d2np == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->d2np)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -277,7 +285,7 @@
                                 @endif
                             </div>
                         </td>
-                    </tr>
+                    </tr> --}}
 
                     <!-- SPMT -->
                     <tr class="bg-gray-50">
@@ -294,11 +302,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->spmt == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->spmt)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -372,11 +384,15 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($dmsRecord && $dmsRecord->sk_pns == "sudah")
-                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD DI SIASN</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">TERUPLOAD
+                                DI SIASN</span>
                             @elseif($dmsRecord && $dmsRecord->sk_pns)
-                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">TERUPLOAD</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">BELUM</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
