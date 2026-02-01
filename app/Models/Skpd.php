@@ -16,6 +16,6 @@ class Skpd extends Model
 
     public function pegawai()
     {
-        return $this->hasMany(Pegawai::class, 'skpd_id');
+        return $this->hasMany(Pegawai::class, 'kode_skpd', 'kode_skpd');
     }
 }

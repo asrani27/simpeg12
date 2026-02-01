@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Layanan;
+use App\Models\Pegawai;
 use App\Models\Pengajuan;
+use App\Models\Skpd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +19,51 @@ class DashboardController extends Controller
     public function superadmin()
     {
         return view('superadmin.dashboard');
+    }
+
+    /**
+     * Display the SKPD dashboard.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function skpd()
+    {
+        // Get the SKPD of the current logged-in user
+        $user = Auth::user();
+        $kodeSkpd = $user->skpd->kode_skpd ?? null;
+
+        // Statistics data
+        $totalPegawai = Pegawai::where('kode_skpd', $kodeSkpd)->count();
+
+        // Pengajuan statistics by status
+        $pengajuanMenunggu = Pengajuan::whereHas('pegawai', function ($query) use ($kodeSkpd) {
+            $query->where('kode_skpd', $kodeSkpd);
+        })->where('status', 'menunggu')->count();
+
+        $pengajuanDiproses = Pengajuan::whereHas('pegawai', function ($query) use ($kodeSkpd) {
+            $query->where('kode_skpd', $kodeSkpd);
+        })->where('status', 'diproses')->count();
+
+        $pengajuanSelesai = Pengajuan::whereHas('pegawai', function ($query) use ($kodeSkpd) {
+            $query->where('kode_skpd', $kodeSkpd);
+        })->where('status', 'selesai')->count();
+
+        // Recent pengajuan (5 most recent)
+        $recentPengajuan = Pengajuan::with(['pegawai', 'layanan'])
+            ->whereHas('pegawai', function ($query) use ($kodeSkpd) {
+                $query->where('kode_skpd', $kodeSkpd);
+            })
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('skpd.dashboard', compact(
+            'totalPegawai',
+            'pengajuanMenunggu',
+            'pengajuanDiproses',
+            'pengajuanSelesai',
+            'recentPengajuan'
+        ));
     }
 
     /**

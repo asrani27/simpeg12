@@ -11,6 +11,8 @@
         <!-- Navigation Menu - Conditional based on user role -->
         @if(Auth::user()->hasRole('superadmin'))
         @include('layouts.menu_superadmin')
+        @elseif(Auth::user()->hasRole('skpd'))
+        @include('layouts.menu_skpd')
         @elseif(Auth::user()->hasRole('dms'))
         @include('layouts.menu_dms')
         @elseif(Auth::user()->hasRole('pegawai'))

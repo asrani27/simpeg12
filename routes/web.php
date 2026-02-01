@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\KepangkatanController;
 use App\Http\Controllers\AdminLayananController;
+use App\Http\Controllers\SkpdController;
+use App\Http\Controllers\PegawaiController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/', [LoginController::class, 'login'])->name('login.process');
@@ -47,6 +49,11 @@ Route::group(['middleware' => ['auth', 'role:kepangkatan']], function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    // SKPD dashboard
+    Route::get('/skpd/dashboard', [DashboardController::class, 'skpd'])
+        ->middleware('role:skpd')
+        ->name('dashboard.skpd');
+
     // Superadmin dashboard
     Route::get('/superadmin/dashboard', [DashboardController::class, 'superadmin'])
         ->middleware('role:superadmin')
@@ -63,6 +70,36 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [AdminLayananController::class, 'edit'])->name('superadmin.admin_layanan.edit');
             Route::put('/{id}', [AdminLayananController::class, 'update'])->name('superadmin.admin_layanan.update');
             Route::delete('/{id}', [AdminLayananController::class, 'destroy'])->name('superadmin.admin_layanan.destroy');
+        });
+
+    // SKPD CRUD (only for superadmin)
+    Route::middleware('role:superadmin')
+        ->prefix('/superadmin/skpd')
+        ->group(function () {
+            Route::get('/', [SkpdController::class, 'index'])->name('superadmin.skpd.index');
+            Route::get('/create', [SkpdController::class, 'create'])->name('superadmin.skpd.create');
+            Route::post('/', [SkpdController::class, 'store'])->name('superadmin.skpd.store');
+            Route::get('/{id}', [SkpdController::class, 'show'])->name('superadmin.skpd.show');
+            Route::get('/{id}/edit', [SkpdController::class, 'edit'])->name('superadmin.skpd.edit');
+            Route::put('/{id}', [SkpdController::class, 'update'])->name('superadmin.skpd.update');
+            Route::delete('/{id}', [SkpdController::class, 'destroy'])->name('superadmin.skpd.destroy');
+            Route::get('/{id}/create-user', [SkpdController::class, 'showCreateUser'])->name('superadmin.skpd.showCreateUser');
+            Route::post('/create-user', [SkpdController::class, 'createUser'])->name('superadmin.skpd.createUser');
+            Route::post('/reset-password', [SkpdController::class, 'resetPassword'])->name('superadmin.skpd.resetPassword');
+        });
+
+    // Pegawai CRUD (only for superadmin)
+    Route::middleware('role:superadmin')
+        ->prefix('/superadmin/pegawai')
+        ->group(function () {
+            Route::get('/', [PegawaiController::class, 'index'])->name('superadmin.pegawai.index');
+            Route::get('/create', [PegawaiController::class, 'create'])->name('superadmin.pegawai.create');
+            Route::post('/', [PegawaiController::class, 'store'])->name('superadmin.pegawai.store');
+            Route::post('/import', [PegawaiController::class, 'import'])->name('superadmin.pegawai.import');
+            Route::get('/{id}', [PegawaiController::class, 'show'])->name('superadmin.pegawai.show');
+            Route::get('/{id}/edit', [PegawaiController::class, 'edit'])->name('superadmin.pegawai.edit');
+            Route::put('/{id}', [PegawaiController::class, 'update'])->name('superadmin.pegawai.update');
+            Route::delete('/{id}', [PegawaiController::class, 'destroy'])->name('superadmin.pegawai.destroy');
         });
 
     // DMS admin routes
@@ -106,39 +143,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
             Route::post('/photo', [ProfileController::class, 'updatePhoto'])->name('updatePhoto');
         });
-
-    // Default dashboard route (for backward compatibility)
-    // Route::get('/dashboard', function () {
-    //     $user = auth()->user();
-
-    //     if ($user->hasRole('superadmin')) {
-    //         return redirect()->route('dashboard.superadmin');
-    //     } elseif ($user->hasRole('admin')) {
-    //         return redirect()->route('dashboard.superadmin');
-    //     } elseif ($user->hasRole('dms')) {
-    //         return redirect()->route('dashboard.dms');
-    //     } elseif ($user->hasRole('pegawai')) {
-    //         return redirect()->route('dashboard.pegawai');
-    //     } elseif ($user->hasRole('kepangkatan')) {
-    //         return redirect()->route('dashboard.kepangkatan');
-    //     } elseif ($user->hasRole('pensiun')) {
-    //         return redirect()->route('dashboard.pensiun');
-    //     } elseif ($user->hasRole('karpeg')) {
-    //         return redirect()->route('dashboard.karpeg');
-    //     } elseif ($user->hasRole('disiplin')) {
-    //         return redirect()->route('dashboard.disiplin');
-    //     } elseif ($user->hasRole('kepegawaian')) {
-    //         return redirect()->route('dashboard.kepegawaian');
-    //     } elseif ($user->hasRole('slks')) {
-    //         return redirect()->route('dashboard.slks');
-    //     } elseif ($user->hasRole('usul_pns')) {
-    //         return redirect()->route('dashboard.usul_pns');
-    //     }
-
-    //     abort(403, 'Unauthorized');
-    // })->name('dashboard');
-
-
 });
 
 Route::group(['middleware' => ['auth', 'role:superadmin|usul_pns|pegawai|kepangkatan|admin|pensiun|karpeg|disiplin|kepegawaian|slks']], function () {

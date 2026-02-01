@@ -83,4 +83,9 @@ class User extends Authenticatable
     {
         return $this->roles()->whereIn('name', (array) $roles)->exists();
     }
+
+    public function skpd()
+    {
+        return $this->hasOne(Skpd::class, 'user_id');
+    }
 }

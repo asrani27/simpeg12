@@ -13,4 +13,9 @@ class Kepangkatan extends Model
     {
         return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
+
+    public function skpd()
+    {
+        return $this->belongsTo(Skpd::class, 'kode_skpd', 'kode_skpd');
+    }
 }

@@ -27,7 +27,7 @@ class PengajuanController extends Controller
 
         $periode = Periode::where('jenis', $layanan->jenis)->first();
         if (!$periode) {
-            return back()->with('error', 'Periode Pengajuan Kepangkatan Belum Dibuka');
+            return back()->with('error', 'Periode Pengajuan Belum Dibuka');
         }
 
         $tanggalSekarang = now();
@@ -35,7 +35,7 @@ class PengajuanController extends Controller
         $sampai = Carbon::parse($periode->sampai);
 
         if (!$tanggalSekarang->between($mulai, $sampai)) {
-            return back()->with('error', 'Pengajuan Kepangkatan mulai tgl: ' . $mulai->translatedFormat('d F Y') . ' s/d ' . $sampai->translatedFormat('d F Y'));
+            return back()->with('error', 'Pengajuan mulai tgl: ' . $mulai->translatedFormat('d F Y') . ' s/d ' . $sampai->translatedFormat('d F Y'));
         }
 
         $pegawaiId = $this->pegawai()->id;

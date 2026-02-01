@@ -66,7 +66,7 @@ class KepangkatanController extends Controller
 
     public function index()
     {
-        $data = Kepangkatan::where('skpd_id', $this->user()->skpd->id)->orderBy('created_at', 'DESC')->get();
+        $data = Kepangkatan::where('kode_skpd', $this->user()->skpd->kode_skpd)->orderBy('created_at', 'DESC')->get();
 
         return view('skpd.kepangkatan.index', compact('data'));
     }
@@ -88,14 +88,14 @@ class KepangkatanController extends Controller
 
     public function create()
     {
-        $pegawai = Pegawai::where('skpd_id', $this->user()->skpd->id)->get();
+        $pegawai = Pegawai::where('kode_skpd', $this->user()->skpd->kode_skpd)->get();
         return view('skpd.kepangkatan.create', compact('pegawai'));
     }
 
     public function store(Request $req)
     {
         $attr = $req->all();
-        $attr['skpd_id'] = $this->user()->skpd->id;
+        $attr['kode_skpd'] = $this->user()->skpd->kode_skpd;
 
         Kepangkatan::create($attr);
         return redirect('/admin/kepangkatan')->with('success', 'Berhasil Di Simpan');
