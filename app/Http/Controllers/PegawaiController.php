@@ -228,6 +228,25 @@ class PegawaiController extends Controller
     }
 
     /**
+     * Display the specified pegawai (SKPD).
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function skpdShow($id)
+    {
+        $pegawai = Pegawai::with('skpd')->findOrFail($id);
+
+        // Ensure SKPD can only view their own employees
+        $skpdUser = Auth::user()->skpd;
+        if ($pegawai->kode_skpd !== $skpdUser->kode_skpd) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        return view('skpd.pegawai.show', compact('pegawai'));
+    }
+
+    /**
      * Update the specified pegawai in storage.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -76,33 +76,47 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIP</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jabatan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIP
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Jabatan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($pegawais as $index => $pegawai)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ ($pegawais->currentPage() - 1) * $pegawais->perPage() + $index + 1 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ ($pegawais->currentPage() - 1)
+                            * $pegawais->perPage() + $index + 1 }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pegawai->nik }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pegawai->nip ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $pegawai->nama }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $pegawai->nama }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             @if($pegawai->status_pegawai === 'PNS')
-                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">PNS</span>
+                            <span
+                                class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">PNS</span>
                             @elseif($pegawai->status_pegawai === 'CPNS')
-                            <span class="px-2 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 rounded-full">CPNS</span>
+                            <span
+                                class="px-2 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 rounded-full">CPNS</span>
                             @elseif($pegawai->status_pegawai === 'PPPK PENUH WAKTU')
-                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">PPPK Penuh Waktu</span>
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">PPPK
+                                Penuh Waktu</span>
                             @elseif($pegawai->status_pegawai === 'PPPK PARUH WAKTU')
-                            <span class="px-2 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full">PPPK Paruh Waktu</span>
+                            <span class="px-2 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full">PPPK
+                                Paruh Waktu</span>
                             @else
-                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">{{ $pegawai->status_pegawai }}</span>
+                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">{{
+                                $pegawai->status_pegawai }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -111,12 +125,14 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-2">
                                 <a href="{{ route('skpd.pegawai.dms', $pegawai->id) }}"
-                                    class="text-green-600 hover:text-green-900 transition-colors duration-150"
+                                    class="text-green-600 hover:text-green-900 transition-colors duration-150 flex items-center space-x-1"
                                     title="Dokumen">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
                                     </svg>
+                                    <span class="text-sm font-medium">DMS</span>
                                 </a>
                                 <a href="{{ route('skpd.pegawai.show', $pegawai->id) }}"
                                     class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
@@ -125,7 +141,8 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
                                     </svg>
                                 </a>
                             </div>
