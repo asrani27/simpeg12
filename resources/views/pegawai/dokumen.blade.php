@@ -11,7 +11,8 @@
         <a href="/pegawai/dashboard"
             class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded-lg transition-colors duration-200">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                </path>
             </svg>
             Kembali
         </a>
@@ -71,11 +72,11 @@
                     </div>
                     <div class="flex">
                         <span class="w-40 text-xs text-gray-600 font-medium">SKPD</span>
-                        <span class="text-xs text-gray-800">: {{$data->pegawai->skpd}}</span>
+                        <span class="text-xs text-gray-800">: {{$data->pegawai->skpd->nama}}</span>
                     </div>
                     <div class="flex">
                         <span class="w-40 text-xs text-gray-600 font-medium">Unit Kerja</span>
-                        <span class="text-xs text-gray-800">: {{$data->pegawai->skpd}}</span>
+                        <span class="text-xs text-gray-800">: {{$data->pegawai->unit_kerja}}</span>
                     </div>
                 </div>
             </div>
