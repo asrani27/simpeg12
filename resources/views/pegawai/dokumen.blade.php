@@ -76,7 +76,7 @@
                     </div>
                     <div class="flex">
                         <span class="w-40 text-xs text-gray-600 font-medium">Unit Kerja</span>
-                        <span class="text-xs text-gray-800">: {{$data->pegawai->unit_kerja}}</span>
+                        <span class="text-xs text-gray-800">:-</span>
                     </div>
                 </div>
             </div>
