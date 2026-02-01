@@ -133,11 +133,10 @@ class DashboardController extends Controller
         $hasWarnings = false;
 
         if ($dmsData) {
-            $fields = ['drh', 'sk_cpns', 'd2np', 'spmt', 'sk_pns'];
+            $fields = ['drh', 'sk_cpns', 'spmt', 'sk_pns'];
             $fieldLabels = [
                 'drh' => 'Daftar Riwayat Hidup (DRH)',
                 'sk_cpns' => 'SK CPNS',
-                'd2np' => 'D2NP',
                 'spmt' => 'SPMT',
                 'sk_pns' => 'SK PNS'
             ];
@@ -153,7 +152,6 @@ class DashboardController extends Controller
             $incompleteDocuments = [
                 'Daftar Riwayat Hidup (DRH)',
                 'SK CPNS',
-                'D2NP',
                 'SPMT',
                 'SK PNS'
             ];
