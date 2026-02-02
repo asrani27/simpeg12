@@ -19,6 +19,8 @@
         @include('layouts.menu_pegawai')
         @elseif(Auth::user()->hasRole('kepangkatan'))
         @include('layouts.menu_kepangkatan')
+        @elseif(Auth::user()->hasRole('pensiun'))
+        @include('layouts.menu_pensiun')
         @endif
         <!-- Profile Menu -->
         <div class="px-3 py-3 border-t border-white/20">

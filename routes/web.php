@@ -2,16 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DmsController;
+use App\Http\Controllers\SkpdController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PensiunController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\KepangkatanController;
 use App\Http\Controllers\AdminLayananController;
-use App\Http\Controllers\SkpdController;
-use App\Http\Controllers\PegawaiController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/', [LoginController::class, 'login'])->name('login.process');
@@ -51,31 +52,31 @@ Route::group(['middleware' => ['auth', 'role:kepangkatan']], function () {
 Route::group(['middleware' => ['auth', 'role:pensiun']], function () {
     Route::prefix('pensiun')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'pensiun'])->name('dashboard.pensiun');
-        Route::get('baru', [KepangkatanController::class, 'baru']);
-        Route::get('diproses', [KepangkatanController::class, 'diproses']);
-        Route::get('selesai', [KepangkatanController::class, 'selesai']);
+        Route::get('baru', [PensiunController::class, 'baru']);
+        Route::get('diproses', [PensiunController::class, 'diproses']);
+        Route::get('selesai', [PensiunController::class, 'selesai']);
 
-        Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [KepangkatanController::class, 'verif_dokumen']);
-        Route::post('dokumen/{id}/perbaikidokumen', [KepangkatanController::class, 'perbaiki_dokumen']);
-        Route::get('dokumen/{id}', [KepangkatanController::class, 'dokumen_pengajuan']);
-        Route::get('selesaipengajuan/{id}', [KepangkatanController::class, 'selesai_pengajuan']);
-        Route::get('deletepengajuan/{id}', [KepangkatanController::class, 'delete_pengajuan']);
-        Route::get('prosespengajuan/{id}', [KepangkatanController::class, 'proses_pengajuan']);
+        Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [PensiunController::class, 'verif_dokumen']);
+        Route::post('dokumen/{id}/perbaikidokumen', [PensiunController::class, 'perbaiki_dokumen']);
+        Route::get('dokumen/{id}', [PensiunController::class, 'dokumen_pengajuan']);
+        Route::get('selesaipengajuan/{id}', [PensiunController::class, 'selesai_pengajuan']);
+        Route::get('deletepengajuan/{id}', [PensiunController::class, 'delete_pengajuan']);
+        Route::get('prosespengajuan/{id}', [PensiunController::class, 'proses_pengajuan']);
 
-        Route::get('persyaratan', [KepangkatanController::class, 'persyaratan']);
-        Route::post('persyaratan/create', [KepangkatanController::class, 'persyaratan_store']);
-        Route::post('persyaratan/edit', [KepangkatanController::class, 'persyaratan_update']);
-        Route::get('persyaratan/delete/{id}', [KepangkatanController::class, 'persyaratan_delete']);
+        Route::get('persyaratan', [PensiunController::class, 'persyaratan']);
+        Route::post('persyaratan/create', [PensiunController::class, 'persyaratan_store']);
+        Route::post('persyaratan/edit', [PensiunController::class, 'persyaratan_update']);
+        Route::get('persyaratan/delete/{id}', [PensiunController::class, 'persyaratan_delete']);
 
-        Route::get('jenis_kenaikan', [KepangkatanController::class, 'jenis_kenaikan']);
-        Route::post('jenis_kenaikan/create', [KepangkatanController::class, 'jenis_kenaikan_store']);
-        Route::post('jenis_kenaikan/edit', [KepangkatanController::class, 'jenis_kenaikan_update']);
-        Route::get('jenis_kenaikan/delete/{id}', [KepangkatanController::class, 'jenis_kenaikan_delete']);
+        Route::get('jenis_pensiun', [PensiunController::class, 'jenis_pensiun']);
+        Route::post('jenis_pensiun/create', [PensiunController::class, 'jenis_pensiun_store']);
+        Route::post('jenis_pensiun/edit', [PensiunController::class, 'jenis_pensiun_update']);
+        Route::get('jenis_pensiun/delete/{id}', [PensiunController::class, 'jenis_pensiun_delete']);
 
-        Route::get('pangkat', [KepangkatanController::class, 'k_index']);
-        Route::post('pangkat/ditolak', [KepangkatanController::class, 'k_tolak']);
-        Route::get('pangkat/{id}/dokumen', [KepangkatanController::class, 'k_dokumen']);
-        Route::get('pangkat/{id}/zip', [KepangkatanController::class, 'downloadZip']);
+        Route::get('pangkat', [PensiunController::class, 'k_index']);
+        Route::post('pangkat/ditolak', [PensiunController::class, 'k_tolak']);
+        Route::get('pangkat/{id}/dokumen', [PensiunController::class, 'k_dokumen']);
+        Route::get('pangkat/{id}/zip', [PensiunController::class, 'downloadZip']);
     });
 });
 

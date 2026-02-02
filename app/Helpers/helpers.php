@@ -8,6 +8,7 @@ use App\Models\Persyaratan;
 if (!function_exists('roleUser')) {
     function roleUser($param)
     {
+
         $routes = [
             'superadmin'   => '/superadmin/dashboard',
             'admin'        => '/admin/dashboard',

@@ -148,19 +148,6 @@ class KepangkatanController extends Controller
         return back()->with('success', 'Berhasil Dikembalikan ke SKPD terkait');
     }
 
-    // public function downloadZip($id)
-    // {
-    //     $pangkat = Kepangkatan::find($id);
-    //     $pegawai = $pangkat->pegawai;
-    //     $files = glob('storage/'. $pegawai->nip.'/pangkat/*');
-    //     Madzipper::make('storage/'. $pegawai->nip.'/download.zip')->add($files)->close();
-
-    //     $name = $pegawai->nip;
-    //     return Storage::download('/public/'. $pegawai->nip.'/download.zip', $name);
-
-    //     return back()->with('success', 'Berhasil Di Download');
-    // }
-
     public function downloadZip($id)
     {
         $zip = new ZipArchive;
