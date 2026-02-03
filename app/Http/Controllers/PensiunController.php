@@ -9,6 +9,8 @@ use App\Models\Pengajuan;
 use App\Models\Persyaratan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class PensiunController extends Controller
 {
@@ -152,5 +154,58 @@ class PensiunController extends Controller
     {
         Pengajuan::find($id)->update(['status' => 2]);
         return back()->with('success', 'Pengajuan selesai');
+    }
+
+    public function downloadZip($id)
+    {
+        $pengajuan = Pengajuan::with(['pegawai', 'upload'])->findOrFail($id);
+        
+        if ($pengajuan->upload->isEmpty()) {
+            return back()->with('error', 'Tidak ada dokumen untuk diunduh');
+        }
+
+        $nip = $pengajuan->pegawai->nip;
+        $zipFileName = $nip . '_pensiun.zip';
+        $zipFilePath = storage_path('app/temp/' . $zipFileName);
+
+        // Create temp directory if not exists
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $zip = new ZipArchive();
+        
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+            return back()->with('error', 'Gagal membuat file ZIP');
+        }
+
+        $addedFiles = 0;
+        
+        foreach ($pengajuan->upload as $upload) {
+            $filePath = storage_path('app/public/pensiun/' . $nip . '/pengajuan' . $id . '/' . $upload->file);
+            
+            if (file_exists($filePath)) {
+                // Add file to zip with a cleaner name
+                $fileExtension = pathinfo($upload->file, PATHINFO_EXTENSION);
+                $cleanFileName = $upload->persyaratan->nama ?? 'dokumen';
+                // Remove special characters
+                $cleanFileName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cleanFileName);
+                $zip->addFile($filePath, $cleanFileName . '.' . $fileExtension);
+                $addedFiles++;
+            }
+        }
+
+        $zip->close();
+
+        if ($addedFiles === 0) {
+            // Clean up empty zip
+            if (file_exists($zipFilePath)) {
+                unlink($zipFilePath);
+            }
+            return back()->with('error', 'Tidak ada dokumen fisik yang ditemukan');
+        }
+
+        // Download and delete zip file
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 }

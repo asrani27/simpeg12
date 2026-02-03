@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'role:pensiun']], function () {
         Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [PensiunController::class, 'verif_dokumen']);
         Route::post('dokumen/{id}/perbaikidokumen', [PensiunController::class, 'perbaiki_dokumen']);
         Route::get('dokumen/{id}', [PensiunController::class, 'dokumen_pengajuan']);
+        Route::get('dokumen/{id}/zip', [PensiunController::class, 'downloadZip']);
         Route::get('selesaipengajuan/{id}', [PensiunController::class, 'selesai_pengajuan']);
         Route::get('deletepengajuan/{id}', [PensiunController::class, 'delete_pengajuan']);
         Route::get('prosespengajuan/{id}', [PensiunController::class, 'proses_pengajuan']);
@@ -104,6 +105,7 @@ Route::group(['middleware' => ['auth', 'role:usul_pns']], function () {
         Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [UsulPnsController::class, 'verif_dokumen']);
         Route::post('dokumen/{id}/perbaikidokumen', [UsulPnsController::class, 'perbaiki_dokumen']);
         Route::get('dokumen/{id}', [UsulPnsController::class, 'dokumen_pengajuan']);
+        Route::get('dokumen/{id}/zip', [UsulPnsController::class, 'downloadZip']);
         Route::get('selesaipengajuan/{id}', [UsulPnsController::class, 'selesai_pengajuan']);
         Route::get('deletepengajuan/{id}', [UsulPnsController::class, 'delete_pengajuan']);
         Route::get('prosespengajuan/{id}', [UsulPnsController::class, 'proses_pengajuan']);

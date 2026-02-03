@@ -5,8 +5,24 @@ Data Persyaratan usul_pns
 @endsection
 @section('content')
 
-<!-- Wrap content in Alpine.js x-data -->
-<div x-data="{ openTambahModal: false }">
+<!-- Wrap content in Alpine.js x-data with all modal states -->
+<div x-data="{ 
+    openTambahModal: false,
+    openEditModal: false,
+    editNama: '', 
+    editNoUrut: '', 
+    editLayananId: '', 
+    editWajib: '', 
+    editId: '',
+    editSyarat(id, nama, noUrut, layananId, wajib) {
+        this.editId = id;
+        this.editNama = nama;
+        this.editNoUrut = noUrut;
+        this.editLayananId = layananId;
+        this.editWajib = wajib;
+        this.openEditModal = true;
+    }
+}">
     <!-- Main Content Card -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
         <!-- Card Header -->
@@ -195,8 +211,7 @@ Data Persyaratan usul_pns
     </div>
 
     <!-- Modal Edit -->
-    <div x-data="{ openEditModal: false, editNama: '', editNoUrut: '', editLayananId: '', editWajib: '', editId: '' }"
-        x-show="openEditModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+    <div x-show="openEditModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
         aria-modal="true" style="display: none;">
         <!-- Backdrop -->
         <div x-show="openEditModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -293,21 +308,11 @@ Data Persyaratan usul_pns
 
     <script>
         function hanyaAngka(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-    return true;
-}
-
-function editSyarat(id, nama, noUrut, layananId, wajib) {
-    const editModal = document.querySelectorAll('[x-data]')[1];
-    editModal.__x.$data.editId = id;
-    editModal.__x.$data.editNama = nama;
-    editModal.__x.$data.editNoUrut = noUrut;
-    editModal.__x.$data.editLayananId = layananId;
-    editModal.__x.$data.editWajib = wajib;
-    editModal.__x.$data.openEditModal = true;
-}
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
     </script>
 </div>
 @endsection

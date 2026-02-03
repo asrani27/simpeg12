@@ -89,8 +89,17 @@
     <div class="lg:col-span-3">
         <div class="bg-white border-2 border-indigo-500 rounded-lg shadow-lg overflow-hidden">
             <!-- Header Card -->
-            <div class="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 flex justify-between items-center">
                 <h3 class="text-sm font-semibold text-white">Dokumen Persyaratan</h3>
+                <a href="{{ route('login') }}/pensiun/dokumen/{{ $id }}/zip"
+                    class="inline-flex items-center gap-1 px-3 py-1 bg-white hover:bg-gray-100 text-purple-600 text-xs font-medium rounded transition-colors duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                        </path>
+                    </svg>
+                    Zip & Download
+                </a>
             </div>
 
             <div class="p-4">
