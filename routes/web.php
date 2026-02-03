@@ -191,6 +191,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [PegawaiController::class, 'edit'])->name('superadmin.pegawai.edit');
             Route::put('/{id}', [PegawaiController::class, 'update'])->name('superadmin.pegawai.update');
             Route::delete('/{id}', [PegawaiController::class, 'destroy'])->name('superadmin.pegawai.destroy');
+            Route::post('/{id}/create-user', [PegawaiController::class, 'createUser'])->name('superadmin.pegawai.createUser');
+            Route::post('/{id}/reset-password', [PegawaiController::class, 'resetPassword'])->name('superadmin.pegawai.resetPassword');
         });
 
     // DMS admin routes

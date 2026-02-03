@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\Skpd;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class PegawaiController extends Controller
 {
@@ -19,7 +22,7 @@ class PegawaiController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Pegawai::with('skpd');
+        $query = Pegawai::with(['skpd', 'user']);
 
         // Search by nama, NIK, atau NIP
         if ($request->search) {
@@ -455,5 +458,91 @@ class PegawaiController extends Controller
                 ->route('superadmin.pegawai.index')
                 ->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Create user account for pegawai.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createUser($id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Check if pegawai already has a user
+        if ($pegawai->user_id) {
+            return redirect()
+                ->route('superadmin.pegawai.index')
+                ->with('error', 'Pegawai ini sudah memiliki akun user');
+        }
+
+        // Validate that pegawai has NIP
+        if (empty($pegawai->nip)) {
+            return redirect()
+                ->route('superadmin.pegawai.index')
+                ->with('error', 'Pegawai tidak memiliki NIP, tidak dapat membuat akun user');
+        }
+
+        // Check if username already exists
+        if (User::where('username', $pegawai->nip)->exists()) {
+            return redirect()
+                ->route('superadmin.pegawai.index')
+                ->with('error', 'Username (NIP) sudah digunakan oleh user lain');
+        }
+
+        // Get pegawai role
+        $rolePegawai = Role::where('name', 'pegawai')->first();
+        if (!$rolePegawai) {
+            return redirect()
+                ->route('superadmin.pegawai.index')
+                ->with('error', 'Role pegawai tidak ditemukan');
+        }
+
+        // Create user
+        $user = User::create([
+            'name' => $pegawai->nama,
+            'username' => $pegawai->nip,
+            'password' => Hash::make('simpegbjm'), // Default password is simpegbjm
+        ]);
+
+        // Attach role to user
+        $user->roles()->attach($rolePegawai->id);
+
+        // Update pegawai with user_id
+        $pegawai->update(['user_id' => $user->id]);
+
+        return redirect()
+            ->route('superadmin.pegawai.index')
+            ->with('success', 'Akun user berhasil dibuat untuk pegawai ' . $pegawai->nama);
+    }
+
+    /**
+     * Reset password for pegawai user account.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function resetPassword($id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Check if pegawai has a user
+        if (!$pegawai->user_id) {
+            return redirect()
+                ->route('superadmin.pegawai.index')
+                ->with('error', 'Pegawai ini tidak memiliki akun user');
+        }
+
+        $user = $pegawai->user;
+
+        // Reset password to simpegbjm
+        $user->update([
+            'password' => Hash::make('simpegbjm')
+        ]);
+
+        return redirect()
+            ->route('superadmin.pegawai.index')
+            ->with('success', 'Password berhasil direset untuk pegawai ' . $pegawai->nama);
     }
 }

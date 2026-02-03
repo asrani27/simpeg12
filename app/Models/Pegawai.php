@@ -17,6 +17,11 @@ class Pegawai extends Model
         return $this->belongsTo(Skpd::class, 'kode_skpd', 'kode_skpd');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     /**
      * Scope untuk filter berdasarkan status pegawai
      */
