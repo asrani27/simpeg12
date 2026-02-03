@@ -38,6 +38,12 @@ class LoginController extends Controller
             // Get the authenticated user
             $user = Auth::user();
 
+            // Check if 2FA is enabled
+            if ($user->google2fa_enabled) {
+                // Redirect to 2FA verification
+                return redirect()->route('2fa.verify');
+            }
+
             // Redirect based on user role
             return redirect()->intended(roleUser($user));
         }

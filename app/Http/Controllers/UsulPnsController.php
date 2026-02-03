@@ -4,47 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Models\Upload;
 use App\Models\Layanan;
-use App\Models\Pensiun;
 use App\Models\Pengajuan;
 use App\Models\Persyaratan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Container\Attributes\Auth;
 
-class PensiunController extends Controller
+class UsulPnsController extends Controller
 {
 
-    public function jenis_pensiun()
+    public function jenis_usul_pns()
     {
-        $data = Layanan::where('jenis', 'pensiun')->paginate(10);
-        return view('pensiun.jenis.index', compact('data'));
+        $data = Layanan::where('jenis', 'usul_pns')->paginate(10);
+        return view('usul_pns.jenis.index', compact('data'));
     }
-    public function jenis_pensiun_store(Request $req)
+    public function jenis_usul_pns_store(Request $req)
     {
         $param = $req->all();
-        $param['jenis'] = 'pensiun';
+        $param['jenis'] = 'usul_pns';
         Layanan::create($param);
         return back();
     }
-    public function jenis_pensiun_update(Request $req)
+    public function jenis_usul_pns_update(Request $req)
     {
         $attr = $req->all();
         Layanan::find($req->jenis_id)->update($attr);
         return back()->with('success', 'Berhasil Diupdate');
     }
-    public function jenis_pensiun_delete($id)
+    public function jenis_usul_pns_delete($id)
     {
         Layanan::find($id)->delete();
         return back()->with('success', 'Berhasil Di Hapus');
     }
     public function persyaratan()
     {
-        $data = Persyaratan::where('jenis', 'pensiun')->paginate(100);
-        return view('pensiun.persyaratan.index', compact('data'));
+        $data = Persyaratan::where('jenis', 'usul_pns')->paginate(100);
+        return view('usul_pns.persyaratan.index', compact('data'));
     }
     public function persyaratan_store(Request $req)
     {
         $param = $req->all();
-        $param['jenis'] = 'pensiun';
+        $param['jenis'] = 'usul_pns';
         $param['nama_jenis'] = Layanan::find($req->layanan_id)->nama;
 
         Persyaratan::create($param);
@@ -65,27 +64,27 @@ class PensiunController extends Controller
     }
     public function baru()
     {
-        return $this->renderPensiunView('baru');
+        return $this->renderusul_pnsView('baru');
     }
 
     public function diproses()
     {
-        return $this->renderPensiunView('diproses');
+        return $this->renderusul_pnsView('diproses');
     }
 
     public function selesai()
     {
-        return $this->renderPensiunView('selesai');
+        return $this->renderusul_pnsView('selesai');
     }
 
-    private function renderPensiunView($tipe)
+    private function renderusul_pnsView($tipe)
     {
-        $pensiun = Pengajuan::where('jenis', 'pensiun')->where('status', 1)->whereNull('verifikator')->count();
-        $diproses = Pengajuan::where('jenis', 'pensiun')->where('status', 1)->whereNotNull('verifikator')->count();
-        $selesai = Pengajuan::where('jenis', 'pensiun')->where('status', 2)->count();
+        $usul_pns = Pengajuan::where('jenis', 'usul_pns')->where('status', 1)->whereNull('verifikator')->count();
+        $diproses = Pengajuan::where('jenis', 'usul_pns')->where('status', 1)->whereNotNull('verifikator')->count();
+        $selesai = Pengajuan::where('jenis', 'usul_pns')->where('status', 2)->count();
 
         $query = Pengajuan::with('pegawai')
-            ->where('jenis', 'pensiun');
+            ->where('jenis', 'usul_pns');
 
         if ($tipe === 'baru') {
             $query->where('status', 1)->whereNull('verifikator');
@@ -102,7 +101,7 @@ class PensiunController extends Controller
             return sortValue($item->gol_pangkat);
         })->values();
 
-        return view('pensiun.dashboard', compact('pensiun', 'diproses', 'selesai', 'data'));
+        return view('usul_pns.dashboard', compact('usul_pns', 'diproses', 'selesai', 'data'));
     }
     public function dokumen_pengajuan($id)
     {
@@ -111,7 +110,7 @@ class PensiunController extends Controller
             return back()->with('error', 'Harap klik tombol proses terlebih dahulu');
         } else {
             $layanan_id = $data->layanan->id;
-            return view('pensiun.dokumen', compact('data', 'layanan_id', 'id'));
+            return view('usul_pns.dokumen', compact('data', 'layanan_id', 'id'));
         }
     }
     public function proses_pengajuan($id)
@@ -132,12 +131,6 @@ class PensiunController extends Controller
         return Auth::user();
     }
 
-    public function index()
-    {
-        $data = Pensiun::where('kode_skpd', $this->user()->skpd->kode_skpd)->orderBy('created_at', 'DESC')->get();
-
-        return view('skpd.pensiun.index', compact('data'));
-    }
     public function verif_dokumen($id, $dokumen_id)
     {
         $data = Upload::find($dokumen_id)->update(['verifikasi' => 1]);

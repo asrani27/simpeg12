@@ -277,4 +277,29 @@ class DashboardController extends Controller
         })->values();
         return view('pensiun.dashboard', compact('pensiun', 'diproses', 'selesai', 'data'));
     }
+
+    public function usul_pns()
+    {
+        //Sub Bidang usul_pns
+        $usul_pns = Pengajuan::where('jenis', 'usul_pns')->where('status', 1)->whereNull('verifikator')->count();
+        $diproses = Pengajuan::where('jenis', 'usul_pns')->where('status', 1)->whereNotNull('verifikator')->count();
+        $selesai = Pengajuan::where('jenis', 'usul_pns')->where('status', 2)->count();
+
+        // Get data with pagination - eager load pegawai relationship and uploads
+        $query = Pengajuan::with(['pegawai', 'upload', 'nama_verifikator'])
+            ->where('jenis', 'usul_pns')
+            ->where(function ($q) {
+                $q->where('status', '1')
+                    ->orWhere('status', '0');
+            });
+
+        // Get all records to sort them properly by gol_pangkat
+        $data = $query->get()->map(function ($item) {
+            $item->gol_pangkat = $item->pegawai->gol_pangkat ?? '';
+            return $item;
+        })->sortBy(function ($item) {
+            return sortValue($item->gol_pangkat);
+        })->values();
+        return view('usul_pns.dashboard', compact('usul_pns', 'diproses', 'selesai', 'data'));
+    }
 }

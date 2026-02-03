@@ -13,10 +13,24 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\KepangkatanController;
 use App\Http\Controllers\AdminLayananController;
+use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\UsulPnsController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/', [LoginController::class, 'login'])->name('login.process');
 Route::get('logout', [LogoutController::class, 'logout'])->name('logout');
+
+// 2FA Routes (require authentication but not 2FA verified)
+Route::middleware(['auth'])->prefix('2fa')->name('2fa.')->group(function () {
+    Route::get('verify', [TwoFactorController::class, 'showVerification'])->name('verify');
+    Route::post('verify', [TwoFactorController::class, 'verify']);
+
+    Route::middleware(['2fa.verified'])->group(function () {
+        Route::get('setup', [TwoFactorController::class, 'showSetup'])->name('setup');
+        Route::post('enable', [TwoFactorController::class, 'enable'])->name('enable');
+        Route::post('disable', [TwoFactorController::class, 'disable'])->name('disable');
+    });
+});
 
 Route::group(['middleware' => ['auth', 'role:kepangkatan']], function () {
     Route::prefix('kepangkatan')->group(function () {
@@ -77,6 +91,37 @@ Route::group(['middleware' => ['auth', 'role:pensiun']], function () {
         Route::post('pangkat/ditolak', [PensiunController::class, 'k_tolak']);
         Route::get('pangkat/{id}/dokumen', [PensiunController::class, 'k_dokumen']);
         Route::get('pangkat/{id}/zip', [PensiunController::class, 'downloadZip']);
+    });
+});
+
+Route::group(['middleware' => ['auth', 'role:usul_pns']], function () {
+    Route::prefix('usul_pns')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'usul_pns'])->name('dashboard.usul_pns');
+        Route::get('baru', [UsulPnsController::class, 'baru']);
+        Route::get('diproses', [UsulPnsController::class, 'diproses']);
+        Route::get('selesai', [UsulPnsController::class, 'selesai']);
+
+        Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [UsulPnsController::class, 'verif_dokumen']);
+        Route::post('dokumen/{id}/perbaikidokumen', [UsulPnsController::class, 'perbaiki_dokumen']);
+        Route::get('dokumen/{id}', [UsulPnsController::class, 'dokumen_pengajuan']);
+        Route::get('selesaipengajuan/{id}', [UsulPnsController::class, 'selesai_pengajuan']);
+        Route::get('deletepengajuan/{id}', [UsulPnsController::class, 'delete_pengajuan']);
+        Route::get('prosespengajuan/{id}', [UsulPnsController::class, 'proses_pengajuan']);
+
+        Route::get('persyaratan', [UsulPnsController::class, 'persyaratan']);
+        Route::post('persyaratan/create', [UsulPnsController::class, 'persyaratan_store']);
+        Route::post('persyaratan/edit', [UsulPnsController::class, 'persyaratan_update']);
+        Route::get('persyaratan/delete/{id}', [UsulPnsController::class, 'persyaratan_delete']);
+
+        Route::get('jenis_usul_pns', [UsulPnsController::class, 'jenis_usul_pns']);
+        Route::post('jenis_usul_pns/create', [UsulPnsController::class, 'jenis_usul_pns_store']);
+        Route::post('jenis_usul_pns/edit', [UsulPnsController::class, 'jenis_usul_pns_update']);
+        Route::get('jenis_usul_pns/delete/{id}', [UsulPnsController::class, 'jenis_usul_pns_delete']);
+
+        Route::get('pangkat', [UsulPnsController::class, 'k_index']);
+        Route::post('pangkat/ditolak', [UsulPnsController::class, 'k_tolak']);
+        Route::get('pangkat/{id}/dokumen', [UsulPnsController::class, 'k_dokumen']);
+        Route::get('pangkat/{id}/zip', [UsulPnsController::class, 'downloadZip']);
     });
 });
 

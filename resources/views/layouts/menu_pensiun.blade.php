@@ -13,7 +13,7 @@
     </a>
 
     <!-- pensiun -->
-    <a href="/pensiun/pangkat"
+    {{-- <a href="/pensiun/pangkat"
         class="flex items-center px-3 py-2 {{ request()->is('pensiun/pangkat') ? 'text-white bg-white/20 backdrop-blur-sm rounded-md border border-white/30' : 'text-white/80 hover:bg-white/10 hover:text-white' }} rounded-md transition-all duration-300 border {{ request()->is('pensiun/pangkat') ? 'border-white/30' : 'border-transparent hover:border-white/20' }}">
         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -21,7 +21,7 @@
             </path>
         </svg>
         <span class="text-sm">pensiun</span>
-    </a>
+    </a> --}}
 
     <!-- Layanan Kenaikan Pangkat -->
     <a href="/pensiun/jenis_pensiun"

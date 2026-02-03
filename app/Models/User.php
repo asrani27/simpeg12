@@ -38,6 +38,8 @@ class User extends Authenticatable
         'password',
         'admin_layanan',
         'profile_photo',
+        'google2fa_secret',
+        'google2fa_enabled',
     ];
 
     /**
