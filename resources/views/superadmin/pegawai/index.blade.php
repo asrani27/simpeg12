@@ -206,7 +206,7 @@
                                 @if(!$pegawai->user_id)
                                 <!-- Create User Button -->
                                 <form action="{{ route('superadmin.pegawai.createUser', $pegawai->id) }}" method="POST"
-                                    onsubmit="return confirm('Apakah Anda yakin ingin membuat akun user untuk pegawai ini? Password default adalah NIP.');"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin membuat akun user untuk pegawai ini? Password default adalah simpegbjm.');"
                                     class="inline">
                                     @csrf
                                     <button type="submit"
@@ -226,7 +226,7 @@
                                 <!-- Reset Password Button -->
                                 <form action="{{ route('superadmin.pegawai.resetPassword', $pegawai->id) }}"
                                     method="POST"
-                                    onsubmit="return confirm('Apakah Anda yakin ingin mereset password untuk pegawai ini? Password akan direset ke NIP.');"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin mereset password untuk pegawai ini? Password akan direset ke simpegbjm.');"
                                     class="inline">
                                     @csrf
                                     <button type="submit"
