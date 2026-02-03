@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth', 'role:kepangkatan']], function () {
         Route::get('dokumen/{id}/berkas-ok/{dokumen_id}', [KepangkatanController::class, 'verif_dokumen']);
         Route::post('dokumen/{id}/perbaikidokumen', [KepangkatanController::class, 'perbaiki_dokumen']);
         Route::get('dokumen/{id}', [KepangkatanController::class, 'dokumen_pengajuan']);
+        Route::get('dokumen/{id}/zip', [KepangkatanController::class, 'downloadZip']);
         Route::get('selesaipengajuan/{id}', [KepangkatanController::class, 'selesai_pengajuan']);
         Route::get('deletepengajuan/{id}', [KepangkatanController::class, 'delete_pengajuan']);
         Route::get('prosespengajuan/{id}', [KepangkatanController::class, 'proses_pengajuan']);

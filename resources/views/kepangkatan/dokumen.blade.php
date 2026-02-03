@@ -75,11 +75,13 @@
                 </div>
                 <div class="flex">
                     <span class="w-40 text-xs text-gray-600 font-medium">SKPD</span>
-                    <span class="text-xs text-gray-800">: {{ $data->pegawai->skpd }}</span>
+                    <span class="text-xs text-gray-800">: {{ $data->pegawai->skpd == null ? '-' :
+                        $data->pegawai->skpd->nama
+                        }}</span>
                 </div>
                 <div class="flex">
                     <span class="w-40 text-xs text-gray-600 font-medium">UNIT KERJA</span>
-                    <span class="text-xs text-gray-800">: {{ $data->pegawai->skpd }}</span>
+                    <span class="text-xs text-gray-800">: {{ $data->pegawai->unit_kerja}}</span>
                 </div>
             </div>
         </div>
@@ -211,25 +213,32 @@
 </div>
 
 <!-- Modal Perbaiki Dokumen -->
-<div id="modal-perbaiki" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div id="modal-perbaiki" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+    aria-modal="true">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <!-- Background overlay -->
-        <div id="modal-backdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <div id="modal-backdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+        </div>
 
         <!-- Modal panel -->
-        <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div
+            class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <form method="post" action="/kepangkatan/dokumen/{{ $id }}/perbaikidokumen" enctype="multipart/form-data">
                 @csrf
                 <div class="bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 flex justify-between items-center">
                     <h3 class="text-sm leading-6 font-medium text-white" id="modal-title">
                         <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
                         </svg>
                         Berikan Keterangan Dokumen Ditolak
                     </h3>
-                    <button type="button" onclick="closeModal('modal-perbaiki')" class="text-white hover:text-gray-200 transition-colors">
+                    <button type="button" onclick="closeModal('modal-perbaiki')"
+                        class="text-white hover:text-gray-200 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
