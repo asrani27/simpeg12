@@ -21,6 +21,7 @@ if (!function_exists('roleUser')) {
             'usul_pns'     => '/usul_pns/dashboard',
             'pegawai'      => '/pegawai/dashboard',
             'skpd'         => '/skpd/dashboard',
+            'dms'          => '/dms/dashboard',
         ];
 
         foreach ($routes as $role => $path) {
